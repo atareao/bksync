@@ -1,0 +1,19 @@
+[profile.default]
+endpoint = "https://rustfs.example.com"
+region = "us-east-1"
+bucket = "my-bucket"
+access_key = "YOUR_ACCESS_KEY"
+secret_key = "YOUR_SECRET_KEY"
+local_dir = "/home/user/s3sync"
+include = ["**/*"]
+exclude = [".DS_Store", "*.tmp", "*.log", ".git/"]
+
+# [profile.production]
+# endpoint = "https://s3.amazonaws.com"
+# region = "eu-west-1"
+# bucket = "prod-bucket"
+# access_key = "AKIAIOSFODNN7EXAMPLE"
+# secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+# local_dir = "/home/user/prod-sync"
+# include = ["**/*"]
+# exclude = [".DS_Store", "*.tmp", "node_modules/"]
