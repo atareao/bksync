@@ -29,6 +29,7 @@ pub async fn bidirectional(
     dry_run: bool,
     concurrency: usize,
     cache: &mut Cache,
+    summary: bool,
 ) -> anyhow::Result<Vec<SyncError>> {
     let progress = Arc::new(Progress::new());
     let errors = Arc::new(std::sync::Mutex::new(Vec::new()));
@@ -384,7 +385,9 @@ pub async fn bidirectional(
     }
 
     let errs = Arc::into_inner(errors).unwrap().into_inner().unwrap();
-    progress.summary("Sync complete");
+    if summary {
+        progress.summary("Sync complete");
+    }
     Ok(errs)
 }
 

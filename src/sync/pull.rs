@@ -75,6 +75,7 @@ pub async fn pull(
     dry_run: bool,
     concurrency: usize,
     cache: &mut Cache,
+    summary: bool,
 ) -> anyhow::Result<Vec<SyncError>> {
     let progress = Arc::new(Progress::new());
     let errors = Arc::new(std::sync::Mutex::new(Vec::new()));
@@ -241,7 +242,9 @@ pub async fn pull(
     }
 
     let errs = Arc::into_inner(errors).unwrap().into_inner().unwrap();
-    progress.summary("Pull complete");
+    if summary {
+        progress.summary("Pull complete");
+    }
     Ok(errs)
 }
 

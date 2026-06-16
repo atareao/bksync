@@ -86,13 +86,13 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
 
     let errors = match &cli.command {
         Commands::Pull { .. } => {
-            sync::pull::pull(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache).await?
+            sync::pull::pull(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache, cli.summary).await?
         }
         Commands::Push { .. } => {
-            sync::push::push(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache).await?
+            sync::push::push(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache, cli.summary).await?
         }
         Commands::Sync { .. } => {
-            sync::bidirectional::bidirectional(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache).await?
+            sync::bidirectional::bidirectional(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache, cli.summary).await?
         }
     };
 

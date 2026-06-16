@@ -15,6 +15,9 @@ pub struct Cli {
     #[arg(long = "dry-run", help = "Show what would be done without executing")]
     pub dry_run: bool,
 
+    #[arg(long = "summary", help = "Show summary with download/upload counts at the end")]
+    pub summary: bool,
+
     #[arg(long = "concurrency", help = "Max concurrent operations (overrides config)")]
     pub concurrency: Option<usize>,
 
