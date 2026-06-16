@@ -1,6 +1,7 @@
 pub mod cache;
 pub mod cli;
 pub mod config;
+pub mod daemon;
 pub mod error;
 pub mod filter;
 pub mod progress;
@@ -72,6 +73,9 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
         Commands::Sync { include, exclude, delete, path } => {
             (include.clone(), exclude.clone(), *delete, path.as_deref())
         }
+        Commands::Daemon { include, exclude, delete, path, .. } => {
+            (include.clone(), exclude.clone(), *delete, path.as_deref())
+        }
     };
 
     let include = merge_filters(&profile.include, &include);
@@ -93,6 +97,12 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
         }
         Commands::Sync { .. } => {
             sync::bidirectional::bidirectional(&s3, &local_dir, prefix, &filter, delete, cli.dry_run, concurrency, &mut cache, cli.summary).await?
+        }
+        Commands::Daemon { refresh_minutes, debounce_ms, .. } => {
+            daemon::run(
+                &s3, &local_dir, prefix, &filter, delete, &mut cache,
+                refresh_minutes * 60, *debounce_ms,
+            ).await?
         }
     };
 

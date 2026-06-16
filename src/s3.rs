@@ -261,4 +261,27 @@ impl S3Client {
 
         Ok(response.metadata().cloned().unwrap_or_default())
     }
+
+    #[instrument(skip(self))]
+    pub async fn head_object(&self, key: &str) -> anyhow::Result<(String, DateTime<Utc>)> {
+        let response = self.client
+            .head_object()
+            .bucket(&self.bucket)
+            .key(key)
+            .send()
+            .await
+            .map_err(|e| map_s3_error("head_object", Some(key), e))?;
+
+        let etag = response.e_tag().unwrap_or_default().trim_matches('"').to_string();
+        let last_modified = response.last_modified()
+            .copied()
+            .unwrap_or(aws_sdk_s3::primitives::DateTime::from_secs(0));
+
+        let nanos = last_modified.as_nanos();
+        let secs = (nanos / 1_000_000_000) as i64;
+        let nsecs = (nanos % 1_000_000_000) as u32;
+        let last_modified_dt: DateTime<Utc> = DateTime::from_timestamp(secs, nsecs).unwrap_or_default();
+
+        Ok((etag, last_modified_dt))
+    }
 }

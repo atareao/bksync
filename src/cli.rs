@@ -60,4 +60,19 @@ pub enum Commands {
         #[arg(long, help = "Delete files/objects not present on the other side")]
         delete: bool,
     },
+    #[command(about = "Run in daemon mode, watching local files and polling S3 for changes")]
+    Daemon {
+        #[arg(long = "path", short = 'P', help = "S3 key prefix: single object or directory (e.g. docs/ or file.md)")]
+        path: Option<String>,
+        #[arg(long, help = "Include pattern (can be repeated)")]
+        include: Vec<String>,
+        #[arg(long, help = "Exclude pattern (can be repeated)")]
+        exclude: Vec<String>,
+        #[arg(long, help = "Delete files/objects not present on the other side")]
+        delete: bool,
+        #[arg(long, default_value = "15", help = "Interval in minutes for full S3 refresh")]
+        refresh_minutes: u64,
+        #[arg(long, default_value = "2000", help = "Debounce window in milliseconds for local events")]
+        debounce_ms: u64,
+    },
 }

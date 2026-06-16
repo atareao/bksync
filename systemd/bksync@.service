@@ -1,0 +1,15 @@
+[Unit]
+Description=bksync daemon for profile %I
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/bksync daemon --profile %i
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
